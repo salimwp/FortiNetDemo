@@ -26,9 +26,6 @@
         ip: "10.1.1.1 255.255.255.0"
         allowaccess: ['https', 'ping']
         name: "VLAN_100"
-    register: mkey
-  - debug:
-      msg: "{{ mkey }}"
   - name: Configure VLAN_200
     fortios_system_interface:
       host: "{{ host }}"
@@ -78,7 +75,7 @@
         vdom: "root"
         interface: "internal"
         type: "vlan"
-        vlanid: "200"
+        vlanid: "400"
         mode: "static"
         ip: "10.1.4.1 255.255.255.0"
         allowaccess: ['https', 'ping']
@@ -287,7 +284,7 @@
             name: "ALL"
         action: "accept"
         nat: "disable"
-        status: "disable"
+        status: "enable"
         policyid: "9"
         name: "VLAN400_VLAN100"
   - name: Configuring firewall policy for VLAN_400 to talk to VLAN_200
@@ -318,7 +315,7 @@
             name: "ALL"
         action: "accept"
         nat: "disable"
-        status: "disable"
+        status: "enable"
         policyid: "10"
         name: "VLAN400_VLAN200"
   - name: Configuring firewall policy for VLAN_300 to talk to VLAN_100
@@ -349,7 +346,68 @@
             name: "ALL"
         action: "accept"
         nat: "disable"
-        status: "disable"
+        status: "enable"
         policyid: "11"
         name: "VLAN300_VLAN100"
-
+  - name: Configuring firewall policy to allow outbound from VLAN_300
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "present"
+        srcintf:
+          -
+            name: "VLAN_300"
+        srcaddr:
+          -
+            name: "VLAN_300_Net_Devs"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "12"
+        name: "VLAN300_Outbound"
+  - name: Configuring firewall policy to allow outbound from VLAN_400
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "present"
+        srcintf:
+          -
+            name: "VLAN_400"
+        srcaddr:
+          -
+            name: "VLAN_400_Net_Ops"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "13"
+        name: "VLAN400_Outbound"

@@ -344,7 +344,7 @@
         vdom: "root"
         interface: "internal"
         type: "vlan"
-        vlanid: "200"
+        vlanid: "400"
         mode: "static"
         ip: "10.1.4.1 255.255.255.0"
         allowaccess: ['https', 'ping']
