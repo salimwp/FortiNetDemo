@@ -1,0 +1,209 @@
+---
+
+- hosts: localhost
+  vars:
+    host: "192.168.50.1"
+    username: "ansible"
+    password: "{{ lookup('password','passwd') }}"
+    vdom: "root"
+    ssl_verify: "False"
+  tasks:
+  - name: Removing firewall policy to allow outbound from VLAN_200
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_200"
+        srcaddr:
+          -
+            name: "VLAN_200_Net"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "8"
+        name: "VLAN200_Outbound"
+  - name: Removing firewall policy to allow outbound from VLAN_100
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_100"
+        srcaddr:
+          -
+            name: "VLAN_100_Net"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "7"
+        name: "VLAN100_Outbound"
+  - name: Removing firewall policy for VLAN_100 to talk to VLAN_200
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_100"
+        srcaddr:
+          -
+            name: "VLAN_100_Net"
+        dstintf:
+          -
+            name: "VLAN_200"
+        dstaddr:
+          -
+            name: "VLAN_200_Net"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "disable"
+        status: "enable"
+        policyid: "5"
+        name: "VLAN100_VLAN200"
+  - name: Removing firewall policy for VLAN_200 to talk to VLAN_100
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_200"
+        srcaddr:
+          -
+            name: "VLAN_200_Net"
+        dstintf:
+          -
+            name: "VLAN_100"
+        dstaddr:
+          -
+            name: "VLAN_100_Net"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "disable"
+        status: "enable"
+        policyid: "6"
+        name: "VLAN200_VLAN100"
+  - name: Removing firewall address for VLAN_100
+    fortios_firewall_address:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_address:
+        state: "absent"
+        type: "ipmask"
+        subnet: "10.1.1.0 255.255.255.0"
+        name: "VLAN_100_Net"
+  - name: Removing firewall address for VLAN_200
+    fortios_firewall_address:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_address:
+        state: "absent"
+        type: "ipmask"
+        subnet: "10.1.2.0 255.255.255.0"
+        name: "VLAN_200_Net"
+  - name: Removing firewall address for VLAN_1
+    fortios_firewall_address:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_address:
+        state: "absent"
+        type: "ipmask"
+        subnet: "192.168.49.1 255.255.255.0"
+        name: "VLAN_1_Net"
+  - name: Removing VLAN_100
+    fortios_system_interface:
+      host: "{{ host }}"
+      username: "{{ username }}" 
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      system_interface:
+        state: "absent"
+        vdom: "root"
+        interface: "internal"
+        type: "vlan"
+        vlanid: "100"
+        mode: "static"
+        ip: "10.1.1.1 255.255.255.0"
+        allowaccess: ['https', 'ping']
+        name: "VLAN_100"
+  - name: Removing VLAN_200
+    fortios_system_interface:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      system_interface:
+        state: "absent"
+        vdom: "root"
+        interface: "internal"
+        type: "vlan"
+        vlanid: "200"
+        mode: "static"
+        ip: "10.1.2.1 255.255.255.0"
+        allowaccess: ['https', 'ping']
+        name: "VLAN_200"
