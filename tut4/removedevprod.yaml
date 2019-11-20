@@ -225,6 +225,68 @@
         status: "disable"
         policyid: "5"
         name: "VLAN100_VLAN200"
+  - name: Configuring firewall policy to allow outbound from VLAN_300
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_300"
+        srcaddr:
+          -
+            name: "VLAN_300_Net_Devs"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "12"
+        name: "VLAN300_Outbound"
+  - name: Configuring firewall policy to allow outbound from VLAN_400
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "absent"
+        srcintf:
+          -
+            name: "VLAN_400"
+        srcaddr:
+          -
+            name: "VLAN_400_Net_Ops"
+        dstintf:
+          -
+            name: "wan1"
+        dstaddr:
+          -
+            name: "all"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "13"
+        name: "VLAN400_Outbound"
   - name: Adding firewall address for VLAN_100
     fortios_firewall_address:
       host: "{{ host }}"
