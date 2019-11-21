@@ -1,0 +1,62 @@
+---
+
+- hosts: localhost
+  vars:
+    host: "10.1.4.1"
+    username: "ansible"
+    password: "{{ lookup('password','passwd') }}"
+    vdom: "root"
+    ssl_verify: "False"
+  tasks:
+  - name: Creating VIP
+    fortios_firewall_vip:
+      host:  "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom:  "{{ vdom }}"
+      https: "True"
+      state: "present"
+      ssl_verify: "False"
+      firewall_vip:
+        name: "Wordpress-Prod_HTTPS"
+        comment: "Mapping ext 443 to WordPress"
+        extintf: "wan1"
+        extip: "192.168.0.240"
+        mappedip:
+        -
+          range: "10.1.2.80"
+        portforward: "enable"
+        protocol: "tcp"
+        extport: "443"
+        mappedport: "443"
+  - name: Configuring firewall policy to allow outbound from VLAN_400
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "present"
+        srcintf:
+          -
+            name: "wan1"
+        srcaddr:
+          -
+            name: "all"
+        dstintf:
+          -
+            name: "VLAN_200"
+        dstaddr:
+          -
+            name: "Wordpress-Prod_HTTPS"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "14"
+        name: "Wordpress Prod Access"
