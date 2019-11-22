@@ -2,8 +2,8 @@
 
 - hosts: localhost
   vars:
-    host: "192.168.0.0"
-    username: "admin"
+    host: "192.168.50.1"
+    username: "ansible"
     password: "{{ lookup('password','passwd') }}"
     vdom: "root"
     ssl_verify: "False"
@@ -26,9 +26,6 @@
         ip: "10.1.1.1 255.255.255.0"
         allowaccess: ['https', 'ping']
         name: "VLAN_100"
-    register: mkey
-  - debug:
-      msg: "{{ mkey }}"
   - name: Configure VLAN_200
     fortios_system_interface:
       host: "{{ host }}"
