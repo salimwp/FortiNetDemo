@@ -29,7 +29,7 @@
         protocol: "tcp"
         extport: "443"
         mappedport: "443"
-  - name: Configuring firewall policy to allow outbound from VLAN_400
+  - name: Configuring firewall policy to allow ext to  VLAN_200
     fortios_firewall_policy:
       host: "{{ host }}"
       username: "{{ username }}"
