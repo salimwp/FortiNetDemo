@@ -411,3 +411,34 @@
         status: "enable"
         policyid: "13"
         name: "VLAN400_Outbound"
+  - name: Configuring firewall policy to allow VLAN_400 to VLAN_300
+    fortios_firewall_policy:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      vdom: "{{ vdom }}"
+      https: "True"
+      ssl_verify: "False"
+      firewall_policy:
+        state: "present"
+        srcintf:
+          -
+            name: "VLAN_400"
+        srcaddr:
+          -
+            name: "VLAN_400_Net_Ops"
+        dstintf:
+          -
+            name: "VLAN_300"
+        dstaddr:
+          -
+            name: "VLAN_300_Net_Devs"
+        schedule: "always"
+        service:
+          -
+            name: "ALL"
+        action: "accept"
+        nat: "enable"
+        status: "enable"
+        policyid: "14"
+        name: "VLAN400_VLAN300"
