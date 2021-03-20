@@ -6,7 +6,7 @@ chardet==3.0.4
 cryptography==2.8
 fortiosapi==1.0.1
 idna==2.8
-Jinja2==2.10.3
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 oyaml==0.9
 paramiko==2.6.0
